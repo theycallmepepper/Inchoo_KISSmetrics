@@ -9,7 +9,7 @@
  */
 class Inchoo_KISSmetrics_Model_Observer {
 
-    const ONEPAGE_CHECKOUT_STEP_LOGIN = 'checkout.onepage.login';
+    const ONEPAGE_CHECKOUT_STEP_LOGIN = 'customer.login'; //was checkout.onepage.login
     const ONEPAGE_CHECKOUT_STEP_BILLING = 'checkout.onepage.billing';
     const ONEPAGE_CHECKOUT_STEP_SHIPPING = 'checkout.onepage.shipping';
     const ONEPAGE_CHECKOUT_STEP_SHIPPING_METHOD = 'checkout.onepage.shipping_method';
@@ -23,6 +23,7 @@ class Inchoo_KISSmetrics_Model_Observer {
     }
 
     public function trackCheckoutStepBillingInformation($observer) {
+        
         if (!$this->_helper->isModuleEnabled() OR !$this->_helper->isModuleOutputEnabled()) {
             return $this;
         }
@@ -74,7 +75,7 @@ class Inchoo_KISSmetrics_Model_Observer {
 
         $responseBody = json_decode((string) $responseBody);
 
-        if ($responseBody->goto_section == 'shipping_method') {
+        if ($responseBody->update_section->{'shipping-method'}) {
 
             $js = Mage::app()->getLayout()
                     ->createBlock('Mage_Core_Block_Text', 'inchoo_kissmetrics_' . self::ONEPAGE_CHECKOUT_STEP_SHIPPING_METHOD);
@@ -83,7 +84,7 @@ class Inchoo_KISSmetrics_Model_Observer {
             $js->setText($js->getText() . '_kmq.push(["record", "One Page Checkout - Step - Shipping Method", ' . $this->_helper->getUtf8CleanJsonArray($this->_helper->getCartInfo()) . ']);');
             $js->setText($js->getText() . '</script>');
 
-            $responseBody->update_section->html = $responseBody->update_section->html . $js->getText();
+            $responseBody->update_section->{'shipping-method'} = $responseBody->update_section->{'shipping-method'} . $js->getText();
         }
 
         $responseBody = json_encode($responseBody);
@@ -98,12 +99,11 @@ class Inchoo_KISSmetrics_Model_Observer {
         }
 
         if ($observer->getEvent()->getBlock()->getNameInLayout() === self::ONEPAGE_CHECKOUT_STEP_SHIPPING) {
-
             $js = Mage::app()->getLayout()
                     ->createBlock('Mage_Core_Block_Text', 'inchoo_kissmetrics_' . self::ONEPAGE_CHECKOUT_STEP_SHIPPING);
 
             $js->setText($js->getText() . '<script type="text/javascript">');
-            $js->setText($js->getText() . 'var inchooKISSmetricsFireOnce = false; $("co-shipping-form").observe("mouseover", function(){ if (inchooKISSmetricsFireOnce == false) { ');
+            $js->setText($js->getText() . 'var inchooKISSmetricsFireOnce = false; $("ship_form").observe("mouseover", function(){ if (inchooKISSmetricsFireOnce == false) { ');
             $js->setText($js->getText() . '_kmq.push(["record", "One Page Checkout - Step - Shipping Information", ' . $this->_helper->getUtf8CleanJsonArray($this->_helper->getCartInfo()) . ']);');
             $js->setText($js->getText() . ' } inchooKISSmetricsFireOnce = true; });');
             $js->setText($js->getText() . '</script>');
@@ -123,16 +123,15 @@ class Inchoo_KISSmetrics_Model_Observer {
                         ->getResponse()->getBody();
 
         $responseBody = json_decode((string) $responseBody);
-
-        if ($responseBody->goto_section == 'payment') {
+        if ($responseBody->update_section->{'payment-method'}) {
             $js = Mage::app()->getLayout()
                     ->createBlock('Mage_Core_Block_Text', 'inchoo_kissmetrics_' . self::ONEPAGE_CHECKOUT_STEP_PAYMENT);
 
-            $js->setText($js->getText() . '<script type="text/javascript">');
+            $js->setText($js->getText() . '<script type="text/javascript">var inchooKISSmetricsPayFireOnce = false; $("checkout-payment-method-load").observe("mouseover", function(){if (inchooKISSmetricsPayFireOnce == false) {');
             $js->setText($js->getText() . '_kmq.push(["record", "One Page Checkout - Step - Payment Information", ' . $this->_helper->getUtf8CleanJsonArray($this->_helper->getCartInfo()) . ']);');
-            $js->setText($js->getText() . '</script>');
+            $js->setText($js->getText() . '}inchooKISSmetricsPayFireOnce = true; });</script>');
 
-            $responseBody->update_section->html = $responseBody->update_section->html . $js->getText();
+            $responseBody->update_section->{'payment-method'} = $responseBody->update_section->{'payment-method'} . $js->getText();     
         }
 
         $responseBody = json_encode($responseBody);
@@ -151,21 +150,24 @@ class Inchoo_KISSmetrics_Model_Observer {
 
         $responseBody = json_decode((string) $responseBody);
 
-        if ($responseBody->goto_section == 'review') {
+        if($responseBody->update_section->review){    
+
             $js = Mage::app()->getLayout()
                     ->createBlock('Mage_Core_Block_Text', 'inchoo_kissmetrics_' . self::ONEPAGE_CHECKOUT_STEP_REVIEW);
 
-            $js->setText($js->getText() . '<script type="text/javascript">');
+            $js->setText($js->getText() . '<script type="text/javascript">var inchooKISSmetricsReviewFireOnce = false;$("checkout-review").observe("mouseover", function(){if (inchooKISSmetricsReviewFireOnce == false) {');
             $js->setText($js->getText() . '_kmq.push(["record", "One Page Checkout - Step - Order Review", ' . $this->_helper->getUtf8CleanJsonArray($this->_helper->getCartInfo()) . ']);');
-            $js->setText($js->getText() . '</script>');
-
-            $responseBody->update_section->html = $responseBody->update_section->html . $js->getText();
+            $js->setText($js->getText() . '}inchooKISSmetricsReviewFireOnce = true; });</script>');
+            
+            $responseBody->update_section->review = $responseBody->update_section->review . $js->getText();
+            
         }
 
         $responseBody = json_encode($responseBody);
+        
+        $observer->getEvent()->getControllerAction()->getResponse()
+                ->setBody($responseBody);
 
-        $observer->getEvent()->getControllerAction()
-                ->getResponse()->setBody($responseBody);
     }
 
 }

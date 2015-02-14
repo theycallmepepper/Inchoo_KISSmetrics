@@ -50,8 +50,39 @@
                         <class>inchoo_kissmetrics/observer</class>
                         <method>trackCheckoutStepShippingInformation</method>
                     </inchoo_kissmetrics_trackCheckoutStepShippingInformation>                                         
-                </observers>                
+                </observers>
+                                              
             </core_block_abstract_to_html_after>
+
+            <controller_action_postdispatch_onepagecheckout_index_updateCheckout>
+                <observers>
+                    <inchoo_kissmetrics_trackCheckoutStepShippingMethod>
+                        <class>inchoo_kissmetrics/observer</class>
+                        <method>trackCheckoutStepShippingMethod</method>
+                    </inchoo_kissmetrics_trackCheckoutStepShippingMethod>
+                    
+                    <inchoo_kissmetrics_trackCheckoutStepPaymentInformation>
+                        <class>inchoo_kissmetrics/observer</class>
+                        <method>trackCheckoutStepPaymentInformation</method>
+                    </inchoo_kissmetrics_trackCheckoutStepPaymentInformation>
+                    
+                    <inchoo_kissmetrics_trackCheckoutStepOrderReview>
+                        <class>inchoo_kissmetrics/observer</class>
+                        <method>trackCheckoutStepOrderReview</method>
+                    </inchoo_kissmetrics_trackCheckoutStepOrderReview>
+                    
+                </observers> 
+            </controller_action_postdispatch_onepagecheckout_index_updateCheckout>
+            <!--<controller_action_postdispatch_onepagecheckout_index_index>
+                <observers>
+                    <inchoo_kissmetrics_trackCheckoutStepShippingMethod>
+                        <class>inchoo_kissmetrics/observer</class>
+                        <method>trackCheckoutStepShippingMethod</method>
+                    </inchoo_kissmetrics_trackCheckoutStepShippingMethod>
+                </observers> 
+            </controller_action_postdispatch_onepagecheckout_index_index>
+            
+            
             <controller_action_postdispatch_checkout_onepage_saveBilling>
                 <observers>
                     <inchoo_kissmetrics_trackCheckoutStepShippingMethod>
@@ -83,7 +114,7 @@
                         <method>trackCheckoutStepOrderReview</method>
                     </inchoo_kissmetrics_trackCheckoutStepOrderReview>
                 </observers>                 
-            </controller_action_postdispatch_checkout_onepage_savePayment>            
+            </controller_action_postdispatch_checkout_onepage_savePayment>   -->      
         </events>
     </frontend>     
     <default>
