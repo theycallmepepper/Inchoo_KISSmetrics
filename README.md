@@ -8,3 +8,5 @@ Magento extension for https://www.kissmetrics.com web service. It support ecomme
 - tracking of checkout page
 - tracking of individual checkout steps
 - tracking of order success page
+
+Note: Currently, this branch removes support for Magento's default One Page Checkout and is only used with IWD Onepage Checkout.
