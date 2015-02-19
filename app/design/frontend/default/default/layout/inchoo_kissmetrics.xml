@@ -6,6 +6,11 @@
             <block type="inchoo_kissmetrics/head" name="inchoo_kissmetrics_head" />
         </reference>
     </default>
+    <cms_page>
+        <reference name="head">
+            <block type="inchoo_kissmetrics/event_cms_view" name="inchoo_kissmetrics_event_cms_view" />
+        </reference>
+    </cms_page>
     <customer_logged_in>
         <reference name="head">
             <block type="inchoo_kissmetrics/customer" name="inchoo_kissmetrics_customer" />
