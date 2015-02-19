@@ -22,9 +22,9 @@ class Inchoo_KISSmetrics_Block_Event_Catalog_Category_Default extends Mage_Core_
         $category = $this->getCurrentCategory();
 
         return array(
-            'id' => $category->getId(),
-            'name' => $category->getName(),
-            'display_mode' => $category->getDisplayMode(),
+            'category_id' => $category->getId(),
+            'category_name' => $category->getName(),
+            'category_display_mode' => $category->getDisplayMode(),
             'store_id' => $category->getStoreId(),
         );
     }
