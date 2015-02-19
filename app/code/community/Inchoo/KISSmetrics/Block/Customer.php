@@ -15,11 +15,17 @@ class Inchoo_KISSmetrics_Block_Customer extends Mage_Core_Block_Template {
     }
 
     public function getIdentify() {
-        if ($this->helper('customer')->isLoggedIn()) {
-            return Mage::getSingleton('customer/session')->getCustomer()->getId();
+        $data = array('id'=>NULL,'name'=>NULL,'email'=>NULL);
+        if ($this->helper('customer')->isLoggedIn()) {         
+            $customer = Mage::getSingleton('customer/session')->getCustomer();
+            $data['id']     = $customer->getId();
+            $data['name']   = $customer->getName();
+            $data['email']  = $customer->getEmail();
+            return (array)$data;
+        }else{
+            $data['id'] = 0;
         }
 
-        return 0;
+        return (array)$data;
     }
-
 }

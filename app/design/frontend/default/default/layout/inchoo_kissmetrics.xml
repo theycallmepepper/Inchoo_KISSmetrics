@@ -28,8 +28,12 @@
         </reference>
     </catalog_category_default>
     <catalog_category_layered>
+        <!-- For some reason only the block for the non layered category is loading properly 
         <reference name="head">
             <block type="inchoo_kissmetrics/event_catalog_category_layered" name="inchoo_kissmetrics_event_catalog_category_layered" />
+        </reference>-->
+        <reference name="head">
+            <block type="inchoo_kissmetrics/event_catalog_category_default" name="inchoo_kissmetrics_event_catalog_category_default" />
         </reference>
     </catalog_category_layered>
     <catalog_product_view>
