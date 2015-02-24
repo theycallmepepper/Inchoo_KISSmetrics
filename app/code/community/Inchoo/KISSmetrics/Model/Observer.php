@@ -46,12 +46,16 @@ class Inchoo_KISSmetrics_Model_Observer {
         } else {
             /* START GUEST BILLING INFO */
             if ($observer->getEvent()->getBlock()->getNameInLayout() === self::ONEPAGE_CHECKOUT_STEP_BILLING) {
+                $email = "jQuery('input[name=\"billing[email]\"]').change(function() { _kmq.push(['set', {'EMail':jQuery('input[name=\"billing[email]\"]').val()}]);    });";
+                $name =  "jQuery('input[name=\"billing[lastname]\"]').change(function() { _kmq.push(['set', {'Name':jQuery('input[name=\"billing[firstname]\"]').val()+jQuery('input[name=\"billing[lastname]\"]').val()}]);    });";
+                
                 $js = Mage::app()->getLayout()
                         ->createBlock('Mage_Core_Block_Text', 'inchoo_kissmetrics_' . self::ONEPAGE_CHECKOUT_STEP_BILLING);
                 $js->setText($js->getText() . '<script type="text/javascript">');
                 $js->setText($js->getText() . 'var inchooKISSmetricsGuestBillFireOnce = false;$("bill_form").observe("click", function(){ if (inchooKISSmetricsGuestBillFireOnce == false) {_kmq.push(["record", "One Page Checkout - Step - Guest Billing Info", ' . $this->_helper->getUtf8CleanJsonArray($this->_helper->getCartInfo()) . ']);');
-                $js->setText($js->getText() . ' } inchooKISSmetricsGuestBillFireOnce = true; });</script>');
-
+                $js->setText($js->getText() . ' } inchooKISSmetricsGuestBillFireOnce = true; });');
+                $js->setText($js->getText() . 'jQuery(document).ready(function() {'.$email.$name);
+                $js->setText($js->getText() . '});</script>');
                 $observer->getEvent()->getTransport()->setHtml(
                         $observer->getEvent()->getTransport()->getHtml() . $js->toHtml()
                 );
